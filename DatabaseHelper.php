@@ -20,7 +20,7 @@
 		//private $testUser;
 		//private $error;
 		
-		// Set up database using given user login credentials
+		/* Set up database using given user login credentials
 		public function __construct($host, $user, $pass, $dbname) {
 			$this->host = $host;
 			$this->user = $user;
@@ -88,7 +88,7 @@
 				echo "Unable to Setup Database connection using preset
 							host and database namebr>$e->getMessage()";
 			}
-		}
+		}*/
 		
 		// Constructor for preset $host
 		public function __construct($dbname, $user, $pass) {
@@ -157,7 +157,7 @@
 		}
 		
 		// TODO
-			// Check if tables and database exist
+			// Functions Check if tables and database exist
 	}
 	
 	
