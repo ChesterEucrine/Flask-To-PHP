@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="Tests/bootstrap.php" colors="true">
     <php>
-        <var name="db_dsn" value="mysql:dbname=d1965919;host=127.0.0.1"/>
+        <var name="db_dsn" value="mysql:dbname=ecs_degreeaudit;host=127.0.0.1"/>
         <var name="db_username" value="root"/>
         <var name="db_password" value=""/>
     </php>
@@ -20,4 +20,7 @@
             </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-clover" target="clover.xml"/>
+    </logging>
 </phpunit>
