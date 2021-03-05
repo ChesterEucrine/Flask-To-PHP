@@ -16,4 +16,5 @@ require_once "DatabaseHelper.php";
 			$this->assertEquals($expectedFullName, $student->full_name);
 			$this->assertEquals($expectedLastName, $student->last_name);
 			$this->assertEquals($expectedFlowChart, $student->flowchart);
+		}
 	}
