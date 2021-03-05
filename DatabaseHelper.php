@@ -83,6 +83,102 @@
 				echo $sql."<br>".$e->getMessage();
 			}
 		}
+		
+		// Function to create student and course tables
+		public function createTable() {
+			// student table:
+			$sql = "CREATE TABLE `student` (
+				`netid` VARCHAR(9) PRIMARY KEY,
+				`first_name` VARCHAR(16) NOT NULL,
+				`last_name` VARCHAR(16) NOT NULL,
+				`flowchart` JSON DEFAULT NULL
+			)";
+			try {
+				$this->result = $this->database->query($sql);
+				echo "student Table Successfully Created<br>";
+			} catch (PDOException $e) {
+				echo $sql."<br>".$e->getMessage();
+			}
+			
+			// course_req table:
+			$sql = "CREATE TABLE `course_req` (
+				`course_no` VARCHAR(9) PRIMARY KEY,
+				`course_prereq` VARCHAR(64),
+				`course_corq` VARCHAR(64)
+			)";
+			try {
+				$this->result = $this->database->query($sql);
+				echo "course_req Table Successfully Created<br>";
+			} catch (PDOException $e) {
+				echo $sql."<br>".$e->getMessage();
+			}
+		}
+		
+		// add student to database
+		public function addRowToStudent($student) {
+			if ($this->isStudentTableCreated()) {
+				$sql = "INSERT INTO student VALUES (
+					$student->netid,
+					$student->first_name,
+					$student->last_name,
+					$student->flowchart
+				)";
+				
+				try {
+					$result = $this->database->query($sql);
+					echo "Student successfully added<br>";
+				} catch (PDOException $e) {
+					echo "Failed to add Student to table<br>";
+					echo $sql."<br>".$e->getMessage();
+				} 
+			} else
+				echo "Could not add student<br>
+							err: student table not created<br>";
+		}
+		
+		
+		// add course requirements to database
+		public function addRowToCourse_req($course_req) {
+			if ($this->isCourse_reqTableCreated()) {
+				$sql = "INSERT INTO course_req VALUES (
+					$course_req->course_no,
+					$course_req->course_prereq,
+					$course_req->course_coreq
+				)";
+				
+				try {
+					$result = $this->database->query($sql);
+					echo "Course Requirement successfully added<br>";
+				} catch (PDOException $e) {
+					echo "Failed to add Course Requirement to table<br>";
+					echo $sql."<br>".$e->getMessage();
+				} 
+			} else
+				echo "Could not add student<br>
+							err: student table not created<br>";
+		}
+		
+		// TODO
+			// Functions Check if tables and database exists
+		public function isCourse_reqTableCreated() {
+			$sql = "DESC student";
+			try {
+				$this->database->query($sql);
+				return true;
+			} catch (PDOException $e) {
+				return false;
+			}
+		}
+		
+		public function isStudentTableCreated() {
+			$sql = "DESC course_req";
+			try {
+				$this->database->query($sql);
+				return true;
+			} catch (PDOException $e) {
+				return false;
+			}
+		}
 	}
 	
 	
