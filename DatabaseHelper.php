@@ -1,10 +1,12 @@
 <?php
+	
+		
 	class DatabaseHelper {
 		// Login credentials
-		private $host='oitdb521d.utdallas.edu';
+		private $host='';
 		private $user='';
 		private $pass='';
-		private $dbname='ecs_degreeaudit';
+		private $dbname='';
 	
 		// How to query to database examples:
 		// $this->result = $this->database->query(
@@ -20,13 +22,17 @@
 		//private $testUser;
 		//private $error;
 		
-		/* Set up database using given user login credentials
-		public function __construct($host, $user, $pass, $dbname) {
+		// Initialize Login credentials
+		public function __construct($host="oitdb521d.utdallas.edu", $user, $pass, $dbname="ecs_degreeaudit") {
 			$this->host = $host;
 			$this->user = $user;
 			$this->pass = $pass;
 			$this->dbname = $dbname;
-			
+		}
+		
+		// Set up database using given user login credentials
+		// Connect to an existing database;
+		public function setupDatabaseFromExisting() {
 			$dsn =	'mysql:host='.$this->host.
 							';dbname='.$this->dbname;
 			try {	
@@ -45,57 +51,9 @@
 			}
 		}
 		
-		// Constructor for preset login credentials
-		public function __construct() {
-			$dsn =	'mysql:host='.$this->host.
-							';dbname='.$this->dbname;
-			try {
-				$options = array(
-					PDO::ATTR_PERSISTENT=>true,
-					PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
-				
-				$this->database = new PDO($dsn,
-					$this->user,
-					$this->pass, 
-					$options);
-				echo "Successfully Setup Database using preset
-							login credentials";
-			} catch (PDOException $e) {
-				echo "Unable to Setup Database connection using preset
-							login credentialsbr>$e->getMessage()";
-			}
-		}
-		
-		// Constructor for preset $host and $dbname
-		public function __construct($user, $pass) {
-			$this->user = $user;
-			$this->pass = $pass;
-			
-			$dsn =	'mysql:host='.$this->host.
-							';dbname='.$this->dbname;
-			try {
-				$options = array(
-					PDO::ATTR_PERSISTENT=>true,
-					PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
-				
-				$this->database = new PDO($dsn,
-					$this->user,
-					$this->pass, 
-					$options);
-				echo "Successfully Setup Database using preset
-							host and database name";
-			} catch (PDOException $e) {
-				echo "Unable to Setup Database connection using preset
-							host and database namebr>$e->getMessage()";
-			}
-		}*/
-		
-		// Constructor for preset $host
-		public function __construct($dbname, $user, $pass) {
-			$this->user = $user;
-			$this->pass = $pass;
-			$this->dbname = $dbname;
-			
+		// Set up database using given user login credentials
+		// Create a new database
+		public function setupDatabaseNew() {
 			try {
 				$dsn =	'mysql:host='.$this->host;
 				$options = array(
@@ -116,48 +74,15 @@
 		// Create database using $this->dbname
 		public function createDatabase() {
 			try {
-				$sql = 'CREATE DATABASE '.$this->dbname;
+				$sql = 'CREATE DATABASE '.$this->dbname." DEFAULT CHARACTER SET 'utf8'";
 				// use exec() because no results are returned
 				$this->database->exec($sql);
 				echo "Database $this->dbname created successfully<br>";
 			} catch(PDOException $e) {
+			  echo "Failed creating database: $this->dbname<br>";
 				echo $sql."<br>".$e->getMessage();
 			}
 		}
-		
-		// Function to create student and course tables
-		// TODO error checks
-		public function createTable() {
-			// student table:
-			$sql = "CREATE TABLE `student` (
-				`netid` VARCHAR(9) PRIMARY KEY,
-				`first_name` VARCHAR(16) NOT NULL,
-				`last_name` VARCHAR(16) NOT NULL,
-				`flowchart` JSON DEFAULT NULL
-			)";
-			try {
-				$this->result = $this->database->query($sql);
-				echo "student Table Successfully Created<br>";
-			} catch (PDOException $e) {
-				echo $sql."<br>".$e->getMessage();
-			}
-			
-			// course_req table:
-			$sql = "CREATE TABLE `course_req` (
-				`course_no` VARCHAR(9) PRIMARY KEY,
-				`course_prereq` VARCHAR(64),
-				`course_corq` VARCHAR(64)
-			)";
-			try {
-				$this->result = $this->database->query($sql);
-				echo "course_req Table Successfully Created<br>";
-			} catch (PDOException $e) {
-				echo $sql."<br>".$e->getMessage();
-			}
-		}
-		
-		// TODO
-			// Functions Check if tables and database exist
 	}
 	
 	
