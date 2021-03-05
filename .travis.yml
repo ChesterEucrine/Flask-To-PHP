@@ -1,20 +1,20 @@
 branches:
-        - master
+  - master
 sudo: required
 language: php
 php:
-	- '7.3'
-	- '7.4'
+  - '7.3'
+  - '7.4'
 	
 services:
-	- mysql
+  - mysql
 	
 # Database setup before testing
 #before_script:
-#	- mysql -u root --password="" < Tests/sql_dump.sql
+#  - mysql -u root --password="" < Tests/sql_dump.sql
 
 script:
-	- phpunit --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover=coverage.xml
+  - phpunit --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover=coverage.xml
 	
 after_sccess:
-	- bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
