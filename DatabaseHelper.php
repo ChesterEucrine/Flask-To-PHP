@@ -6,7 +6,7 @@
 		public $last_name;
 		public $flowchart;
 		
-		public function __construc($netid, $first_name, $last_name, $flowchart) {
+		public function __construct($netid, $first_name, $last_name, $flowchart) {
 			$this->netid = $netid;
 			$this->first_name = $first_name;
 			$this->last_name = $last_name;
@@ -19,7 +19,7 @@
 		public $course_prereq;
 		public $course_coreq;
 		
-		public function __construc($course_no, $course_prereq, $course_coreq) {
+		public function __construct($course_no, $course_prereq, $course_coreq) {
 			$course_req->course_no = $course_no;
 			$course_req->course_prereq = $course_prereq;
 			$course_req->course_coreq = $course_coreq;
