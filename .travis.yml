@@ -5,16 +5,16 @@ language: php
 php:
   - '7.3'
   - '7.4'
-	
+
 services:
   - mysql
-	
+
 # Database setup before testing
 #before_script:
 #  - mysql -u root --password="" < Tests/sql_dump.sql
 
 script:
   - phpunit --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover=coverage.xml
-	
+
 after_sccess:
   - bash <(curl -s https://codecov.io/bash)
