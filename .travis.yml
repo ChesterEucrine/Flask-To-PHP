@@ -15,7 +15,7 @@ services:
 #  - mysql -u root --password="" < Tests/sql_dump.sql
 
 script:
-  - phpunit --configuration phpunit.xml --testsuite PHPTests --coverage-text #--coverage-clover ./coverage.xml
+  - phpunit --verbose --configuration phpunit.xml --testsuite PHPTests --coverage-text #--coverage-clover ./coverage.xml
 
 after_script:
   - bash <(curl -s https://codecov.io/bash)
