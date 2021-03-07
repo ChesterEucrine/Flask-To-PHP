@@ -2,10 +2,8 @@
 
 <phpunit bootstrap="Tests/bootstrap.php" colors="true">
     <php>
-      <env name="XDEBUG_MODE" value="coverage"/>
-      <ini name="xdebug.mode" value="coverage"/>
-    </php>
-    <php>
+        <env name="XDEBUG_MODE" value="coverage"/>
+        <ini name="xdebug.mode" value="coverage"/>
         <var name="db_dsn" value="mysql:dbname=ecs_degreeaudit;host=127.0.0.1"/>
         <var name="db_username" value="root"/>
         <var name="db_password" value=""/>
