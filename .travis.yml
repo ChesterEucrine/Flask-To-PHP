@@ -11,11 +11,15 @@ services:
   - mysql
 
 # Database setup before testing
-#before_script:
+before_script:
 #  - mysql -u root --password="" < Tests/sql_dump.sql
+#  - travis_retry composer self-update
+#  - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-  - phpunit --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover=coverage.xml
+  - XDEBUG_MODE=coverage phpunit --verbose --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover coverage.xml
+  - ls -la
+  - cat .phpunit.result.cache
 
 after_script:
   - bash <(curl -s https://codecov.io/bash)
