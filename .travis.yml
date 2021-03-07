@@ -17,7 +17,7 @@ before_script:
 #  - travis_retry composer install --no-interaction --prefer-source --dev
 
 script:
-  - XDEBUG_MODE=coverage php -n -dzend_extension=xdebug vendor/bin/phpunit --verbose --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover coverage.xml
+  - XDEBUG_MODE=coverage phpunit --verbose --configuration phpunit.xml --testsuite PHPTests --coverage-text --coverage-clover coverage.xml
   - ls -la
   - cat .phpunit.result.cache
 
