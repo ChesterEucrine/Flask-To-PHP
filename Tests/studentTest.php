@@ -1,6 +1,6 @@
 <?php
 
-require_once "DatabaseHelper.php";
+require_once "includes/DatabaseHelper.php";
 
 	class studentTest extends PHPUnit\Framework\TestCase {
 		public function testConstructor() {
