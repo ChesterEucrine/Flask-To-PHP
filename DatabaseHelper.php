@@ -103,14 +103,22 @@
 				// use exec() because no results are returned
 				$this->database->exec($sql);
 				echo "Database $this->dbname created successfully<br>";
+				return 0;
 			} catch(PDOException $e) {
 			  echo "Failed creating database: $this->dbname<br>";
-				echo $sql."<br>".$e->getMessage();
+			  echo $sql."<br>".$e->getMessage();
+			  return -1;
 			}
 		}
 		
 		// Function to create student and course tables
+		// Return Values
+		// 	 0 - Successful
+		// 	-1 - Failed to create Student table
+		// 	-2 - Failed to create Course Requirement table
+		// 	-3 - Failed to create both tables
 		public function createTable() {
+			$err = 0;
 			// student table:
 			$sql = "CREATE TABLE `student` (
 				`netid` VARCHAR(9) PRIMARY KEY,
@@ -123,6 +131,7 @@
 				echo "student Table Successfully Created<br>";
 			} catch (PDOException $e) {
 				echo $sql."<br>".$e->getMessage();
+				$err -= -1;
 			}
 			
 			// course_req table:
@@ -136,7 +145,9 @@
 				echo "course_req Table Successfully Created<br>";
 			} catch (PDOException $e) {
 				echo $sql."<br>".$e->getMessage();
+				$err -= -2;
 			}
+			return $err;
 		}
 		
 		// add student to database
@@ -152,13 +163,17 @@
 				try {
 					$result = $this->database->query($sql);
 					echo "Student successfully added<br>";
+					return 0;
 				} catch (PDOException $e) {
 					echo "Failed to add Student to table<br>";
 					echo $sql."<br>".$e->getMessage();
+					return -1;
 				} 
-			} else
+			} else {
 				echo "Could not add student<br>
 							err: student table not created<br>";
+				return -2;
+			}
 		}
 		
 		
@@ -174,17 +189,36 @@
 				try {
 					$result = $this->database->query($sql);
 					echo "Course Requirement successfully added<br>";
+					return 0;
 				} catch (PDOException $e) {
 					echo "Failed to add Course Requirement to table<br>";
 					echo $sql."<br>".$e->getMessage();
+					return -1;
 				} 
-			} else
+			} else {
 				echo "Could not add student<br>
 							err: student table not created<br>";
+				return -2;
+			}
 		}
-		
-		// TODO
-			// Functions Check if tables and database exists
+
+		public function update_course ($course) {
+			$sql = "UPDATE course_req
+				SET course_prereq=$course->course_prereq,
+				course_coreq=$course->course_coreq
+				WHERE course_no=$course->course_no";
+
+			try {
+				$this->database->query($sql);
+				echo "Course Requirement Updated";
+				return 0;
+			} catch (PDOException $e) {
+				echo "Failed to update Course Requirement";
+				return -1;
+			}
+		}
+
+		// Functions to Check if tables exists
 		public function isCourse_reqTableCreated() {
 			$sql = "DESC student";
 			try {
