@@ -21,4 +21,12 @@ class App {
 			return password_verify($password, $correctPasswordHash);
 		}
 	}
+
+	public function has_filetype($filename, $filetype) {
+		$temp = explode($filename, '.');
+		if (str_contains($filename, '.') && (end($temp) == $filetype)) {
+			return true;
+		}
+		return false;
+	}
 }
