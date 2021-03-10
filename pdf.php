@@ -1,50 +1,39 @@
-<?php
+<?php 
 
-function saveFileAs($targetDir, $fileName, $newFileName, $files) {
-    $fileType = $files[$fileName]['type'];
-    $fileSize = $files[$fileName]['size'];
-    $fileTmpName = $files[$fileName]['tmp_name'];
-    $fileError = $files[$fileName]['error'];
-
-    // Check file extension
-    $fileExt = explode('.', $fileName);
-    $fileActualExt = strtolower(end($fileExt));
-
-    // Allowed File Formats
-    $allowed = $array('jpg', 'jpeg', 'png', 'pdf');
-
-    if in_array($fileActualExt, $allowed) {
-      if ($fileError === 0) {
-        // File Size Limit
-        if ($fileSize <= 20000) {
-          $newFileName = $newFileName.".".$fileActualExt;
-          $fileDest = $targetDir.$newFileName;
-          if (move_uploaded_file($fileTmpName, $target_file)) {
-            return 0;
-          } else {
-            return 4;
-          }
-        } else {
-          return 3;
-        }
-      } else {
-        return 2;
-      }
-    } else {
-      return 1;
-    }
-}
+require_once('includes/appFunctions.php');
+require_once('vendor/autoload.php');
 
 if (isset($_POST['submit'])) {
     $password = $_POST['password'];
+    
     $flowChartName = $_POST['flowChartName'];
     $file = $_FILES['file'];
 
-    // Save file to upload folder
-    // After checking if it is safe
+    $app = new App();
+    $targetDir = "./uploads/";
+    $fileName = "file";
+    $newFileName = $_POST['flowChartName'];
 
-    // convert file from pdf to image if it not an image
-    // delete pdf
+    // Verify password
+    if (!$app->is_correct_password($password))
+	    die("Unauthorized: incorrect password");
+
+    // Save file to upload folder
+    $result = $app->saveFileAs($targetDir, $fileName, $newFileName, $_FILES);
+
+    if ($result == 0) {
+	// Convert PDF to png if file is a pdf
+	    if ($result['isPDF'] == 0) {
+		$fileDest = $result['fileDest']
+		$pdf = new Spatie\PdfToImage\Pdf($fileDest);
+		echo "Upload file: $newFileName (rename to $newFileName)";
+		$pdf->saveImage($targetDir.$newFileName."png");
+		// Delete pdf
+		exec("rm $fileDest");
+	}
+    } else {
+	    echo $result['error'];
+    }
 }
 
 ?>

@@ -22,11 +22,71 @@ class App {
 		}
 	}
 
+	// Function to validate file type
+	// Redundant for saving files since $_FILES array
+	// contains file type
 	public function has_filetype($filename, $filetype) {
 		$temp = explode($filename, '.');
 		if (str_contains($filename, '.') && (end($temp) == $filetype)) {
 			return true;
 		}
 		return false;
+	}
+
+
+	// Function to save file from form as a given fileName
+	// Can also decide targetDirectory to save file
+	// Returns an array with
+	// 	result : 0, 1, 2, 3, 4, 5
+	// 	error : message
+	// 	fileDest : if successful, path to file using given $targetDir
+	public function saveFileAs($targetDir, $fileName, $newFileName, $files) {
+		$fileType = $files[$fileName]['type'];
+		$fileSize = $files[$fileName]['size'];
+		$fileTmpName = $files[$fileName]['tmp_name'];
+		$fileError = $files[$fileName]['error'];
+
+		// Check file extension
+		$fileExt = explode('.', $fileName);
+		$fileActualExt = strtolower(end($fileExt));
+
+		// Allowed File Formats
+		$allowed = $array('jpg', 'jpeg', 'png', 'pdf');
+
+		// output array
+		$ouput = array();
+		if (in_array($fileActualExt, $allowed)) {
+			if ($fileError === 0) {
+				// File Size Limit
+				if ($fileSize <= 20000) {
+					$newFileName = $newFileName.".".$fileActualExt;
+					if (preg_match('/^[\/\w\-. ]+$/', $filename)) {
+						$fileDest = $targetDir.$newFileName;
+						if (move_uploaded_file($fileTmpName, $target_file)) {
+							$output['result'] = 0;
+							$output['fileDest'] = $fileDest;
+							if ($fileActualExt == 'pdf')
+								$output['isPDF'] = 0;
+						} else {
+							$output['error'] = 'could not move and rename temporary file version to upload directory';
+							$output['result'] = 1;
+						}
+					} else {
+						$output['error'] = 'Invalid File Name';
+						$output['result'] = 2;
+					}
+				} else {	
+					$output['error'] = 'File is greater than 20Mb';
+					$output['result'] = 3;
+				}
+			} else {
+				$output['error'] = 'Error while uploading file';
+				$output['result'] = 4;
+			}
+		} else {
+			$output['error'] = 'File extension not allowed';
+			$output['result'] = 5;
+		}
+		return result;
 	}
 }

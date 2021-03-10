@@ -1,16 +1,34 @@
 <?php
 
+require_once('includes/appFunctions.php');
+
+$json_folder = "";
 
 if (isset($_POST['submit'])) {
     $password = $_POST['password'];
     $flowChartName = $_POST['flowChartName'];
-    $file = $_FILES['file'];
 
-    // Save file to upload folder
-    // After checking if it is safe
+    $app = new App();
 
-    // convert file from pdf to image if it not an image
-    // delete pdf
+    // Verify Password
+    if (!$app->is_correct_password($password))
+	    die("Incorrect Advisor Password");
+
+    $filePath = $json_folder.$_GET['fileName'];
+    $file = fopen($filePath, 'w');
+
+    fwrite($_POST['body']);
+    echo "ok";
+}
+
+if (isset($_GET['fileName'])) {
+    $fileDest = $json_folder.$_GET['fileName'];
+    if (file_exists($filesDest)) {
+	$file = fopen($fileDest, 'r');
+	echo fread($file);
+    } else {
+	echo "[]";
+    }
 }
 
 ?>
