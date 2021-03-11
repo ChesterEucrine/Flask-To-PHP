@@ -2,11 +2,10 @@
 
 require_once('includes/appFunctions.php');
 
-$json_folder = "";
+$json_folder = "./JSON_FOLDER/";
 
 if (isset($_POST['submit'])) {
     $password = $_POST['password'];
-    $flowChartName = $_POST['flowChartName'];
 
     $app = new App();
 
@@ -14,10 +13,11 @@ if (isset($_POST['submit'])) {
     if (!$app->is_correct_password($password))
 	    die("Incorrect Advisor Password");
 
-    $filePath = $json_folder.$_GET['fileName'];
-    $file = fopen($filePath, 'w');
+    $filePath = $json_folder.$_POST['fileName'].".json";
 
-    fwrite($_POST['body']);
+    $file = fopen($filePath, 'w') or die("Could Not open JSON file");
+
+    fwrite($file, $_POST['body']); 
     echo "ok";
 }
 
@@ -25,7 +25,7 @@ if (isset($_GET['fileName'])) {
     $fileDest = $json_folder.$_GET['fileName'];
     if (file_exists($filesDest)) {
 	$file = fopen($fileDest, 'r');
-	echo fread($file);
+	echo fread($file, filesize($fileDest));
     } else {
 	echo "[]";
     }
@@ -38,8 +38,8 @@ if (isset($_GET['fileName'])) {
     <title>Submit JSON Information</title>
 </head>
 <body>
-    <div class="form-container">
-    <form method="POST" ectype="file/something">
+    <div class="form-container"> 
+    <form method="POST" enctype="multipart/form-data">
         <div>
             <label for="fileName">File Name</label>
             <input type="text" name="fileName" required>

@@ -10,7 +10,7 @@ if (isset($_POST['submit'])) {
     $file = $_FILES['file'];
 
     $app = new App();
-    $targetDir = "./uploads/";
+    $targetDir = "./UPLOAD_FOLDER/";
     $fileName = "file";
     $newFileName = $_POST['flowChartName'];
 
@@ -21,10 +21,10 @@ if (isset($_POST['submit'])) {
     // Save file to upload folder
     $result = $app->saveFileAs($targetDir, $fileName, $newFileName, $_FILES);
 
-    if ($result == 0) {
+    if ($result['result'] == 0) {
 	// Convert PDF to png if file is a pdf
 	    if ($result['isPDF'] == 0) {
-		$fileDest = $result['fileDest']
+		$fileDest = $result['fileDest'];
 		$pdf = new Spatie\PdfToImage\Pdf($fileDest);
 		echo "Upload file: $newFileName (rename to $newFileName)";
 		$pdf->saveImage($targetDir.$newFileName."png");
@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
     <div class="form-container">
-    <form method="POST" ectype="file/something">
+    <form method="POST" enctype="multipart/form-data">
         <div>
             <label for="flowChartName">Flow Chart Name</label>
             <input type="text" name="flowChartName" required>

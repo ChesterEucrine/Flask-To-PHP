@@ -4,7 +4,7 @@ class App {
 	private $PASSWORD_FILE = "PASSWORD_HASH_DO_NOT_COMMIT";
 
 	public function change_password($newPassword) {
-		$file = fopen($PASSWORD_FILE, "w");
+		$file = fopen($this->PASSWORD_FILE, "w");
 		$update = hash("sha256", $newPassword);
 		fwrite($file, $update);
 		fclose($file);
@@ -12,12 +12,12 @@ class App {
 	}
 
 	public function is_correct_password($password) {
-		if (!file_exists($PASSWORD_FILE)) {
+		if (!file_exists($this->PASSWORD_FILE)) {
 			echo "Advisor password not set.";
 			return false;
 		} else {
-			$file = fopen($PASSWORD_FILE, "r");
-			$correctPasswordHash = fread($file);
+			$file = fopen($this->PASSWORD_FILE, "r");
+			$correctPasswordHash = fread($file, filesize($this->PASSWORD_FILE));
 			return password_verify($password, $correctPasswordHash);
 		}
 	}
@@ -41,30 +41,32 @@ class App {
 	// 	error : message
 	// 	fileDest : if successful, path to file using given $targetDir
 	public function saveFileAs($targetDir, $fileName, $newFileName, $files) {
+		$fName = $files[$fileName]['name'];
 		$fileType = $files[$fileName]['type'];
 		$fileSize = $files[$fileName]['size'];
 		$fileTmpName = $files[$fileName]['tmp_name'];
 		$fileError = $files[$fileName]['error'];
 
 		// Check file extension
-		$fileExt = explode('.', $fileName);
+		$fileExt = explode('.', $fName);
 		$fileActualExt = strtolower(end($fileExt));
 
 		// Allowed File Formats
-		$allowed = $array('jpg', 'jpeg', 'png', 'pdf');
+		$allowed = array('png', 'pdf');
 
 		// output array
 		$ouput = array();
 		if (in_array($fileActualExt, $allowed)) {
 			if ($fileError === 0) {
 				// File Size Limit
-				if ($fileSize <= 20000) {
+				if ($fileSize <= 20000000) {
 					$newFileName = $newFileName.".".$fileActualExt;
-					if (preg_match('/^[\/\w\-. ]+$/', $filename)) {
+					if (preg_match('/^[\/\w\-. ]+$/', $fName)) {
 						$fileDest = $targetDir.$newFileName;
-						if (move_uploaded_file($fileTmpName, $target_file)) {
+						if (move_uploaded_file($fileTmpName, $fileDest)) {
 							$output['result'] = 0;
 							$output['fileDest'] = $fileDest;
+							$output['isPDF'] = -1;
 							if ($fileActualExt == 'pdf')
 								$output['isPDF'] = 0;
 						} else {
@@ -84,9 +86,9 @@ class App {
 				$output['result'] = 4;
 			}
 		} else {
-			$output['error'] = 'File extension not allowed';
+			$output['error'] = 'File extension not allowed: Only pdf or png';
 			$output['result'] = 5;
 		}
-		return result;
+		return $output;
 	}
 }
